@@ -1,89 +1,86 @@
-import { GetStaticProps } from "next";
-import Image from "next/image";
+import { GetStaticProps } from 'next';
+import Image from 'next/image';
 
-import styles from "../../styles/Pokemon.module.css";
+import type {
+    IResultsPokeApi,
+    IPokemonDetails,
+    Pokemon,
+} from '../../@types/pokemon';
 
-type Pokemon = {
-  pokemon: IPokemonDetails;
-};
-
-interface IPokemonDetails {
-  id: number;
-  name: string;
-  types: [{ type: { name: string } }];
-  height: number;
-  weight: number;
-}
-
-interface IResultsPokeApi {
-  name: string;
-  url: string;
-  id: number;
-}
+import styles from '../../styles/Pokemon.module.css';
 
 export const getStaticPaths = async () => {
-  const maxPokemons = 252;
-  const api = `https://pokeapi.co/api/v2/pokemon/`;
+    const maxPokemons = 252;
+    const api = `https://pokeapi.co/api/v2/pokemon/`;
 
-  const res = await fetch(`${api}?limit=${maxPokemons}`);
-  const data = await res.json();
+    const res = await fetch(`${api}?limit=${maxPokemons}`);
+    const data = await res.json();
 
-  const paths = data.results.map((item: IResultsPokeApi, index: number) => {
+    const paths = data.results.map((item: IResultsPokeApi, index: number) => {
+        return {
+            params: { pokemonId: (index + 1).toString() },
+        };
+    });
+
     return {
-      params: { pokemonId: (index + 1).toString() },
+        paths,
+        fallback: false,
     };
-  });
-
-  return {
-    paths,
-    fallback: false,
-  };
 };
 
-export const getStaticProps: GetStaticProps<{ pokemon: IResultsPokeApi }> = async (context) => {
-  const id = context.params!.pokemonId;
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-  const data = await res.json();
+export const getStaticProps: GetStaticProps<{
+    pokemon: IResultsPokeApi;
+}> = async (context) => {
+    const id = context.params!.pokemonId;
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+    const data = await res.json();
 
-  return {
-    props: { pokemon: data },
-  };
+    return {
+        props: { pokemon: data },
+    };
 };
 
-export default function Pokemon({ pokemon }: Pokemon) {
-  return (
-    <div className={styles.pokemon_container}>
-      <h1 className={styles.pokemon_title}>{pokemon.name}</h1>
-      <Image
-        src={`https://cdn.traction.one/pokedex/pokemon/${pokemon.id}.png`}
-        width="200"
-        height="200"
-        alt={pokemon.name}
-      />
-      <div>
-        <h3>Número:</h3>
-        <p>#{pokemon.id}</p>
-      </div>
-      <div>
-        <h3>Tipo:</h3>
-        <div className={styles.types_container}>
-          {pokemon.types.map((item, index) => (
-            <span key={index} className={`${styles.type} ${styles["type_" + item.type.name]}`}>
-              {item.type.name}
-            </span>
-          ))}
+export default function Pokemon({ pokemonDetails }: Pokemon) {
+    return pokemonDetails ? (
+        <div className={styles.pokemon_container}>
+            <h1 className={styles.pokemon_title}>{pokemonDetails.name}</h1>
+            <Image
+                src={`https://cdn.traction.one/pokedex/pokemon/${pokemonDetails.id}.png`}
+                width="200"
+                height="200"
+                alt={pokemonDetails.name}
+            />
+            <div>
+                <h3>Número:</h3>
+                <p>#{pokemonDetails.id}</p>
+            </div>
+            <div>
+                <h3>Tipo:</h3>
+                <div className={styles.types_container}>
+                    {pokemonDetails.types.map((item, index) => (
+                        <span
+                            key={index}
+                            className={`${styles.type} ${
+                                styles['type_' + item.type.name]
+                            }`}
+                        >
+                            {item.type.name}
+                        </span>
+                    ))}
+                </div>
+            </div>
+            <div className={styles.data_container}>
+                <div className={styles.data_height}>
+                    <h4>Altura:</h4>
+                    <p>{pokemonDetails.height * 10} cm</p>
+                </div>
+                <div className={styles.data_weight}>
+                    <h4>Peso:</h4>
+                    <p>{pokemonDetails.weight / 10} kg</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div className={styles.data_container}>
-        <div className={styles.data_height}>
-          <h4>Altura:</h4>
-          <p>{pokemon.height * 10} cm</p>
-        </div>
-        <div className={styles.data_weight}>
-          <h4>Peso:</h4>
-          <p>{pokemon.weight / 10} kg</p>
-        </div>
-      </div>
-    </div>
-  );
+    ) : (
+        <></>
+    );
 }

@@ -1,12 +1,10 @@
-import Navbar from "./Navbar"
-import Footer from "./Footer"
-import Head from "next/head"
+import Navbar from './Navbar';
+import Footer from './Footer';
+import Head from 'next/head';
 
-interface LayoutProps {
-    children: React.ReactNode
-}
+import type { LayoutProps } from '../@types/pokemon';
 
-export default function Layout({ children } : LayoutProps) {
+export default function Layout({ children }: LayoutProps) {
     return (
         <>
             <Head>
@@ -17,5 +15,5 @@ export default function Layout({ children } : LayoutProps) {
             <main className="main_container">{children}</main>
             <Footer />
         </>
-    )
+    );
 }
