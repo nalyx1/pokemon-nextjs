@@ -1,9 +1,14 @@
-export type Pokemon = {
-    pokemon?: IResultsPokeApi;
-    pokemons?: IResultsPokeApi[];
-    pokemonDetails?: IPokemonDetails;
+export type Pokemons = {
+    pokemons: IResultsPokeApi[];
 };
 
+export type Pokemon = {
+    pokemon: IResultsPokeApi;
+};
+
+export type PokemonDetails = {
+    pokemonDetails: IPokemonDetails;
+};
 export interface IResultsPokeApi {
     name: string;
     url: string;

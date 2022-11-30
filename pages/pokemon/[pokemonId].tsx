@@ -1,11 +1,7 @@
 import { GetStaticProps } from 'next';
 import Image from 'next/image';
 
-import type {
-    IResultsPokeApi,
-    IPokemonDetails,
-    Pokemon,
-} from '../../@types/pokemon';
+import type { IResultsPokeApi, PokemonDetails } from '../../@types/pokemon';
 
 import styles from '../../styles/Pokemon.module.css';
 
@@ -29,19 +25,18 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps<{
-    pokemon: IResultsPokeApi;
+    pokemonDetails: IResultsPokeApi;
 }> = async (context) => {
     const id = context.params!.pokemonId;
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await res.json();
-
     return {
-        props: { pokemon: data },
+        props: { pokemonDetails: data },
     };
 };
 
-export default function Pokemon({ pokemonDetails }: Pokemon) {
-    return pokemonDetails ? (
+export default function Pokemon({ pokemonDetails }: PokemonDetails) {
+    return (
         <div className={styles.pokemon_container}>
             <h1 className={styles.pokemon_title}>{pokemonDetails.name}</h1>
             <Image
@@ -80,7 +75,5 @@ export default function Pokemon({ pokemonDetails }: Pokemon) {
                 </div>
             </div>
         </div>
-    ) : (
-        <></>
     );
 }

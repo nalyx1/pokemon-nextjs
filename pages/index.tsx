@@ -1,7 +1,7 @@
 import Card from '../components/Card';
 import Image from 'next/image';
 
-import type { IResultsPokeApi, Pokemon } from '../@types/pokemon';
+import type { IResultsPokeApi, Pokemons } from '../@types/pokemon';
 
 import styles from '../styles/Home.module.css';
 
@@ -23,8 +23,8 @@ export const getStaticProps = async () => {
     };
 };
 
-export default function Home({ pokemons }: Pokemon) {
-    return pokemons ? (
+export default function Home({ pokemons }: Pokemons) {
+    return (
         <>
             <div className={styles.title_container}>
                 <h1 className={styles.title}>
@@ -44,7 +44,5 @@ export default function Home({ pokemons }: Pokemon) {
                 ))}
             </div>
         </>
-    ) : (
-        <></>
     );
 }

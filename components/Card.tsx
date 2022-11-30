@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import type { IResultsPokeApi, Pokemon } from '../@types/pokemon';
+import type { Pokemon } from '../@types/pokemon';
 
 import styles from '../styles/Card.module.css';
 
 export default function Card({ pokemon }: Pokemon) {
-    return pokemon ? (
+    return (
         <div className={styles.card}>
             <Image
                 src={`https://cdn.traction.one/pokedex/pokemon/${pokemon.id}.png`}
@@ -20,7 +20,5 @@ export default function Card({ pokemon }: Pokemon) {
                 Detalhes
             </Link>
         </div>
-    ) : (
-        <></>
     );
 }

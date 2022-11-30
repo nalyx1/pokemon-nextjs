@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
     background-color: #333;
-    height: 150px;
+    min-height: 10vh;
     border-top: 3px solid #111;
     color: #fff;
 }
